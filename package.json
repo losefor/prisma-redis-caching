@@ -1,0 +1,19 @@
+{
+  "name": "node-package-template",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^16.11.7",
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/parser": "^5.3.1",
+    "eslint": "^8.2.0",
+    "typescript": "^4.4.4"
+  },
+  "author": {
+    "name": "Muhammed Baqer Ahmed (@losefor)"
+  },
+  "files": [
+    "dist/**/*"
+  ]
+}
