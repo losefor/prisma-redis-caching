@@ -4,15 +4,15 @@
     "main": "index.js",
     "license": "MIT",
     "scripts": {
-        "build": "tsc",
+        "build": "npm run clean && tsc",
+        "check-types": "tsc",
         "clean": "rimraf dist",
-        "lint": "eslint ."
+        "lint": "eslint .",
+        "lint-fix": "npm run lint --fix"
     },
     "devDependencies": {
-        "@prisma/client": "^3.4.2",
         "@types/ioredis": "^4.28.1",
         "@types/lodash": "^4.14.176",
-        "@types/morgan": "^1.9.3",
         "@types/node": "^16.11.7",
         "@typescript-eslint/eslint-plugin": "^5.3.1",
         "@typescript-eslint/parser": "^5.3.1",
