@@ -1,19 +1,34 @@
 {
-  "name": "node-package-template",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^16.11.7",
-    "@typescript-eslint/eslint-plugin": "^5.3.1",
-    "@typescript-eslint/parser": "^5.3.1",
-    "eslint": "^8.2.0",
-    "typescript": "^4.4.4"
-  },
-  "author": {
-    "name": "Muhammed Baqer Ahmed (@losefor)"
-  },
-  "files": [
-    "dist/**/*"
-  ]
+    "name": "node-package-template",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc",
+        "clean": "rimraf dist",
+        "lint": "eslint ."
+    },
+    "devDependencies": {
+        "@prisma/client": "^3.4.2",
+        "@types/ioredis": "^4.28.1",
+        "@types/lodash": "^4.14.176",
+        "@types/morgan": "^1.9.3",
+        "@types/node": "^16.11.7",
+        "@typescript-eslint/eslint-plugin": "^5.3.1",
+        "@typescript-eslint/parser": "^5.3.1",
+        "eslint": "^8.2.0",
+        "ioredis": "^4.28.0",
+        "prettier": "2.4.1",
+        "rimraf": "^3.0.2",
+        "typescript": "^4.4.4"
+    },
+    "author": {
+        "name": "Muhammed Baqer Ahmed (@losefor)"
+    },
+    "files": [
+        "dist/**/*"
+    ],
+    "dependencies": {
+        "lodash": "^4.17.21"
+    }
 }
