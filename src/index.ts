@@ -4,8 +4,36 @@ import _ from 'lodash';
 interface ModelInstance<PrismaModel> {
     model: PrismaModel;
     actions: PrismaAction[];
-    expirationInSec: number;
 }
+
+/**
+ *
+ * @param redisInstance
+ * @param modelInstances
+ * @returns prisma middleware
+ *
+ * @example
+ * ```ts
+ * // Prisma client
+ * const prisma = new PrismaClient();
+ *
+ *const cachingMiddleware = createCachingMiddleware<Prisma.ModelName>(redis, [
+ *  {
+ *    model: "City",
+ *    actions: ["findMany"],
+ *    expirationInSec: 1 * 60 * 60 * 24,
+ *  },
+ *  {
+ *    model: "User",
+ *    actions: ["findUnique", "findMany"],
+ *    expirationInSec: 1 * 60 * 60 * 24,
+ *  },
+ *]);
+ *
+ *prisma.$use(cachingMiddleware);
+ *  ```
+ *
+ */
 
 export const createCachingMiddleware = <PrismaModel>(
     redisInstance: any,
@@ -34,7 +62,7 @@ export const createCachingMiddleware = <PrismaModel>(
                 _.includes(modelInstance.actions, action)
             ) {
                 // Check if it's already in redis
-                let instance = await redisInstance.get(key);
+                let instance = await redisInstance.hget(model, key);
                 instance = JSON.parse(instance);
 
                 if (instance) {
@@ -46,12 +74,7 @@ export const createCachingMiddleware = <PrismaModel>(
                 const result = await next(params);
                 const value = JSON.stringify(result);
 
-                redisInstance.set(
-                    key,
-                    value,
-                    'EX',
-                    modelInstance.expirationInSec
-                );
+                redisInstance.hset(model, key, value);
 
                 console.log('Fetch from the db');
 
@@ -68,7 +91,7 @@ export const createCachingMiddleware = <PrismaModel>(
                 action === 'deleteMany')
         ) {
             console.log('clear the cache');
-            await redisInstance.del(key);
+            await redisInstance.del(model);
         }
 
         // Make the query and save it into the redis
