@@ -1,22 +1,28 @@
-import { Redis } from 'ioredis';
-import { MiddlewareParams, PrismaAction, Middleware } from './types/prisma';
+import { PrismaAction } from './types/prisma';
 import _ from 'lodash';
+
 interface ModelInstance<PrismaModel> {
     model: PrismaModel;
     actions: PrismaAction[];
     expirationInSec: number;
 }
 
-export const caching = <PrismaModel>(
-    redis: Redis,
+export const createCachingMiddleware = <PrismaModel>(
+    redisInstance: any,
     modelInstances: ModelInstance<PrismaModel>[]
-): Middleware => {
+): any => {
     return async (
-        params: MiddlewareParams,
+        params: any,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        next: (prisma: MiddlewareParams) => Promise<any>
+        next: (prisma: any) => Promise<any>
     ) => {
         const { args, model, action } = params;
+
+        const key = JSON.stringify({
+            model,
+            action,
+            ...args,
+        });
 
         // Extract the models from the ModelInstances
         const models = _.map(modelInstances, 'model');
@@ -27,31 +33,27 @@ export const caching = <PrismaModel>(
                 modelInstance.model === model &&
                 _.includes(modelInstance.actions, action)
             ) {
-                const key = JSON.stringify({
-                    model,
-                    action,
-                    ...args,
-                });
-
                 // Check if it's already in redis
-                let cities = await redis.hget(model, key);
-                cities = JSON.parse(cities);
+                let instance = await redisInstance.get(key);
+                instance = JSON.parse(instance);
 
-                if (cities) {
-                    return cities;
+                if (instance) {
+                    console.log('Return from the cache');
+                    return instance;
                 }
 
                 // Make the query and save it into the redis
                 const result = await next(params);
                 const value = JSON.stringify(result);
 
-                redis.hset(
-                    model,
+                redisInstance.set(
                     key,
                     value,
                     'EX',
                     modelInstance.expirationInSec
                 );
+
+                console.log('Fetch from the db');
 
                 return result;
             }
@@ -60,9 +62,13 @@ export const caching = <PrismaModel>(
         // Clean the redis when the model get Updated or Deleted
         if (
             models.includes(model) &&
-            (action === 'delete' || action === 'update')
+            (action === 'delete' ||
+                action === 'update' ||
+                action === 'updateMany' ||
+                action === 'deleteMany')
         ) {
-            await redis.del(model);
+            console.log('clear the cache');
+            await redisInstance.del(key);
         }
 
         // Make the query and save it into the redis

@@ -1,1 +1,5 @@
+# Project packages
 node_modules
+
+# Build folder 
+dist
