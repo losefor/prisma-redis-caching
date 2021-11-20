@@ -1,6 +1,6 @@
 {
     "name": "prisma-redis-caching",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "license": "MIT",
@@ -8,7 +8,7 @@
         "build": "npm run clean && tsc",
         "check-types": "tsc",
         "clean": "rimraf dist",
-        "full-clean": "rimraf dist && rimraf node_modules",
+        "clear:hard": "rimraf dist && rimraf node_modules",
         "lint": "eslint .",
         "lint-fix": "npm run lint --fix"
     },
