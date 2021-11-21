@@ -1,4 +1,3 @@
-import { PrismaAction } from './types/prisma';
 import _ from 'lodash';
 
 interface ModelInstance<PrismaModel, PrismaActions> {
