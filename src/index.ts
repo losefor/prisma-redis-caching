@@ -1,9 +1,9 @@
 import { PrismaAction } from './types/prisma';
 import _ from 'lodash';
 
-interface ModelInstance<PrismaModel> {
+interface ModelInstance<PrismaModel, PrismaActions> {
     model: PrismaModel;
-    actions: PrismaAction[];
+    actions: PrismaActions[];
 }
 
 /**
@@ -17,16 +17,17 @@ interface ModelInstance<PrismaModel> {
  * // Prisma client
  * const prisma = new PrismaClient();
  *
- *const cachingMiddleware = createCachingMiddleware<Prisma.ModelName>(redis, [
+ * const cachingMiddleware = createCachingMiddleware<
+ *  Prisma.ModelName,
+ *  Prisma.PrismaAction
+ *>(redis, [
  *  {
  *    model: "City",
  *    actions: ["findMany"],
- *    expirationInSec: 1 * 60 * 60 * 24,
  *  },
  *  {
- *    model: "User",
- *    actions: ["findUnique", "findMany"],
- *    expirationInSec: 1 * 60 * 60 * 24,
+ *    model: "Category",
+ *    actions: ["findMany"],
  *  },
  *]);
  *
@@ -35,9 +36,9 @@ interface ModelInstance<PrismaModel> {
  *
  */
 
-export const createCachingMiddleware = <PrismaModel>(
+export const createCachingMiddleware = <PrismaModel, PrismaActions>(
     redisInstance: any,
-    modelInstances: ModelInstance<PrismaModel>[]
+    modelInstances: ModelInstance<PrismaModel, PrismaActions>[]
 ): any => {
     return async (
         params: any,
