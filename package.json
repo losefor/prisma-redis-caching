@@ -13,7 +13,6 @@
         "lint-fix": "npm run lint --fix"
     },
     "devDependencies": {
-        "@types/ioredis": "^4.28.1",
         "@types/lodash": "^4.14.176",
         "@types/node": "^16.11.7",
         "@typescript-eslint/eslint-plugin": "^5.3.1",
