@@ -46,4 +46,12 @@ you can provide configuration the middleware creator which is an array of object
 |model| any |
 |actions|any|
 
-NOTE: you can provide generics as the example above to have the proper intellisense 
+NOTE: you can provide generics as the example above to have the proper intellisense
+
+-   Finally provide the cacheMiddleware into prisma middleware
+
+```ts
+prisma.$use(cachingMiddleware);
+```
+
+-   Have fun :roll_eyes:
